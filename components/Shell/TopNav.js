@@ -1,40 +1,23 @@
 import React from 'react';
+import Image from 'next/image';
 import { DocSearch } from '@docsearch/react';
 
 import { AppLink as Link } from '../AppLink';
 
 function Search() {
-  if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_API_KEY) {
-    return null;
+  // Only render search if Algolia credentials are configured
+  const hasAlgoliaConfig = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID && 
+                          process.env.NEXT_PUBLIC_ALGOLIA_API_KEY;
+  
+  if (!hasAlgoliaConfig) {
+    return null; // Hide search bar if no API keys
   }
-
+  
   return (
     <DocSearch
       appId={process.env.NEXT_PUBLIC_ALGOLIA_APP_ID}
       apiKey={process.env.NEXT_PUBLIC_ALGOLIA_API_KEY}
       indexName="zdoc_netlify_app_klx2xamsju_pages"
-      placeholder="Search documentation..."
-      translations={{
-        button: {
-          buttonText: 'Search',
-          buttonAriaLabel: 'Search',
-        },
-      }}
-      transformItems={(items) => {
-        // Add error handling to prevent hierarchy errors
-        return items.map((item) => ({
-          ...item,
-          hierarchy: item.hierarchy || {
-            lvl0: item.title || 'Documentation',
-            lvl1: item.title || item.name || 'Content',
-            lvl2: null,
-            lvl3: null,
-            lvl4: null,
-            lvl5: null,
-            lvl6: null,
-          },
-        }));
-      }}
     />
   );
 }
@@ -46,12 +29,7 @@ export function TopNav({ children }) {
       <nav>
         <div className="flex top-row">
           <Link href="/" className="flex">
-            <img 
-              src="/actian-logo.svg" 
-              alt="Actian" 
-              title="Actian"
-              style={{ height: '45px', width: 'auto' }}
-            />
+            <Image src="/actian-logo.svg" alt="Actian Logo" width={225} height={37} priority />
           </Link>
           <button
             className="hamburger"
