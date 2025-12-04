@@ -2,7 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 
 import { AppLink as Link } from '../components/AppLink';
-import { Footer, SideNav, TableOfContents, TopNav } from '../components/Shell';
+import { Footer, SideNav, TableOfContents, TopNav, PrevNext } from '../components/Shell';
+import Feedback from '../components/Feedback';
 
 import '@docsearch/css';
 import 'prismjs';
@@ -86,6 +87,7 @@ export default function MyApp(props) {
 
   const isDocs = props.router.asPath.startsWith('/docs');
   const isLandingPage = props.router.pathname === '/';
+  const isSandbox = props.router.pathname === '/sandbox';
 
   React.useEffect(() => console.log(MARKDOC), []);
 
@@ -95,6 +97,9 @@ export default function MyApp(props) {
         <title>{`${TITLE} | ${title}`}</title>
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="/minichat.css" />
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script src="/MiniChatJavaScript.js" defer></script>
         <link
           rel="preload"
           as="font"
@@ -123,6 +128,7 @@ export default function MyApp(props) {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="referrer" content="strict-origin" />
+        <meta name="algolia-site-verification" content="50A0B4A451D65BAB" />
         <meta name="title" content={title} />
         <meta name="description" content={description} />
         <meta property="og:type" content="website" />
@@ -159,6 +165,12 @@ export default function MyApp(props) {
         <main className="flex column">
           <div id="skip-nav" />
           <Component {...pageProps} />
+          {!isLandingPage && !isSandbox && (
+            <>
+              <PrevNext />
+              <Feedback />
+            </>
+          )}
         </main>
         {isDocs && toc ? <TableOfContents toc={toc} /> : null}
       </div>
