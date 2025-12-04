@@ -4,11 +4,6 @@ import { DocSearch } from '@docsearch/react';
 import { AppLink as Link } from '../AppLink';
 
 function Search() {
-  // Temporarily disabled until Algolia index has proper hierarchy structure
-  // See ALGOLIA_INDEX_FIX.md for instructions on fixing the index
-  return null;
-  
-  /*
   if (!process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || !process.env.NEXT_PUBLIC_ALGOLIA_API_KEY) {
     return null;
   }
@@ -25,9 +20,23 @@ function Search() {
           buttonAriaLabel: 'Search',
         },
       }}
+      transformItems={(items) => {
+        // Add error handling to prevent hierarchy errors
+        return items.map((item) => ({
+          ...item,
+          hierarchy: item.hierarchy || {
+            lvl0: item.title || 'Documentation',
+            lvl1: item.title || item.name || 'Content',
+            lvl2: null,
+            lvl3: null,
+            lvl4: null,
+            lvl5: null,
+            lvl6: null,
+          },
+        }));
+      }}
     />
   );
-  */
 }
 
 export function TopNav({ children }) {
